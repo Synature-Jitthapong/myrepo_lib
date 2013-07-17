@@ -45,6 +45,40 @@ public class SaleMode {
 		return saleMode;
 	}
 	
+	public List<ProductGroups.SaleMode> listSaleMode(int[] saleModeId){
+		List<ProductGroups.SaleMode> saleModeList = 
+				new ArrayList<ProductGroups.SaleMode>();
+		
+		openDatabase();
+		
+		String saleModeParam = "";
+		
+		if(saleModeId.length > 0){
+			for(int i = 0; i < saleModeId.length; i++){
+				saleModeParam += saleModeId[i];
+				if(i < saleModeId.length - 1)
+					saleModeParam += ",";
+			}
+		}
+		
+		Cursor cursor = dbHelper.myDataBase.rawQuery("SELECT * FROM SaleMode " +
+				" WHERE SaleModeID IN (" + saleModeParam + ")", null);
+		if(cursor.moveToFirst()){
+			do{
+				ProductGroups.SaleMode saleMode = new ProductGroups.SaleMode();
+				saleMode.setSaleModeID(cursor.getInt(cursor.getColumnIndex("SaleModeID")));
+				saleMode.setSaleModeName(cursor.getString(cursor.getColumnIndex("SaleModeName")));
+				saleMode.setPositionPrefix(cursor.getInt(cursor.getColumnIndex("PositionPrefix")));
+				saleMode.setPrefixText(cursor.getString(cursor.getColumnIndex("PrefixText")));
+				saleMode.setPrefixQueue(cursor.getString(cursor.getColumnIndex("PrefixQueue")));
+				saleModeList.add(saleMode);
+			}while(cursor.moveToNext());
+		}
+		cursor.close();
+		closeDatabase();
+		return saleModeList;
+	}
+	
 	public List<ProductGroups.SaleMode> listSaleMode(){
 		List<ProductGroups.SaleMode> saleModeList = 
 				new ArrayList<ProductGroups.SaleMode>();
