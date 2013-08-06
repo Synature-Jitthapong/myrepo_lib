@@ -221,12 +221,12 @@ public abstract class POSOrderBase {
 
 	// list order grouper
 	public List<syn.pos.data.model.MenuDataItem> listAllOrder(
-			int transactionId, int computerId) {
+			int transactionId, int computerId, int seatId) {
 		List<syn.pos.data.model.MenuDataItem> ml = new ArrayList<syn.pos.data.model.MenuDataItem>();
 
 		String strSql = "SELECT a.TransactionID, a.ComputerID, b.OrderDetailID, "
 				+ " b.ProductID,  b.Qty, b.PricePerUnit, b.TotalRetailPrice, b.SaleMode, "
-				+ " b.OrderComment, c.ProductTypeID, d.MenuName_0, d.MenuName_1, d.MenuName_2, "
+				+ " b.OrderComment, b.SeatID, b.SeatName, c.ProductTypeID, d.MenuName_0, d.MenuName_1, d.MenuName_2, "
 				+ " d.MenuShortName_0, d.MenuShortName_1, d.MenuImageLink "
 				+ " FROM "
 				+ ORDER_TRANSACTION_TABLE
@@ -243,7 +243,11 @@ public abstract class POSOrderBase {
 				+ transactionId
 				+ " AND a.ComputerID="
 				+ computerId
-				+ " AND a.TransactionStatusID=1 ORDER BY b.OrderDetailID ";
+				+ " AND a.TransactionStatusID=1 "; 
+			
+		if(seatId != 0)
+			strSql += " AND b.SeatID=" + seatId;
+		strSql += " ORDER BY b.OrderDetailID ";
 
 		openDatabase();
 		Cursor cursor = dbHelper.myDataBase.rawQuery(strSql, null);
@@ -259,6 +263,8 @@ public abstract class POSOrderBase {
 						.getColumnIndex("OrderDetailID")));
 				mi.setProductID(cursor.getInt(cursor
 						.getColumnIndex("ProductID")));
+				mi.setSeatId(cursor.getInt(cursor.getColumnIndex("SeatID")));
+				mi.setSeatName(cursor.getString(cursor.getColumnIndex("SeatName")));
 				mi.setMenuName(cursor.getString(cursor
 						.getColumnIndex("MenuName_0")));
 				mi.setMenuName1(cursor.getString(cursor
@@ -453,12 +459,12 @@ public abstract class POSOrderBase {
 	}
 
 	public syn.pos.data.model.MenuDataItem listOrder(int transactionId,
-			int computerId, int orderDetailId) {
+			int computerId, int orderDetailId, int seatId) {
 		syn.pos.data.model.MenuDataItem mi = new syn.pos.data.model.MenuDataItem();
 
 		String strSql = "SELECT a.TransactionID, a.ComputerID, b.OrderDetailID, "
 				+ " b.ProductID,  b.Qty, b.PricePerUnit, b.TotalRetailPrice, b.SaleMode, "
-				+ " b.OrderComment, c.ProductTypeID, d.MenuName_0, d.MenuName_1, d.MenuName_2, "
+				+ " b.OrderComment, b.SeatID, b.SeatName, c.ProductTypeID, d.MenuName_0, d.MenuName_1, d.MenuName_2, "
 				+ " d.MenuShortName_0, d.MenuShortName_1, d.MenuImageLink "
 				+ " FROM "
 				+ ORDER_TRANSACTION_TABLE
@@ -477,7 +483,11 @@ public abstract class POSOrderBase {
 				+ computerId
 				+ " AND b.OrderDetailID="
 				+ orderDetailId
-				+ " AND a.TransactionStatusID=1 ORDER BY b.OrderDetailID ";
+				+ " AND a.TransactionStatusID=1 ";
+		if(seatId != 0)
+			strSql += " AND b.SeatID=" + seatId;
+		
+		strSql += " ORDER BY b.OrderDetailID ";
 
 		openDatabase();
 		Cursor cursor = dbHelper.myDataBase.rawQuery(strSql, null);
@@ -490,6 +500,8 @@ public abstract class POSOrderBase {
 						.getColumnIndex("ComputerID")));
 				mi.setOrderDetailId(cursor.getInt(cursor
 						.getColumnIndex("OrderDetailID")));
+				mi.setSeatId(cursor.getInt(cursor.getColumnIndex("SeatID")));
+				mi.setSeatName(cursor.getString(cursor.getColumnIndex("SeatName")));
 				mi.setProductID(cursor.getInt(cursor
 						.getColumnIndex("ProductID")));
 				mi.setMenuName(cursor.getString(cursor
@@ -685,11 +697,11 @@ public abstract class POSOrderBase {
 
 	// list order
 	public List<syn.pos.data.model.MenuDataItem> listOrder(int transactionId,
-			int computerId) {
+			int computerId, int seatId) {
 		List<syn.pos.data.model.MenuDataItem> ml = new ArrayList<syn.pos.data.model.MenuDataItem>();
 
 		String strSql = "SELECT a.TransactionID, a.ComputerID, a.MemberID, b.OrderDetailID, "
-				+ " b.ProductID, d.MenuName_0, d.MenuName_1, d.MenuName_2, " 
+				+ " b.ProductID, b.SeatID, b.SeatName, d.MenuName_0, d.MenuName_1, d.MenuName_2, " 
 				+ " d.MenuShortName_0, d.MenuShortName_1, b.Qty, b.PricePerUnit, b.TotalRetailPrice, "
 				+ " b.OrderComment, b.SaleMode, c.ProductTypeID "
 				+ " FROM "
@@ -707,7 +719,11 @@ public abstract class POSOrderBase {
 				+ transactionId
 				+ " AND a.ComputerID="
 				+ computerId
-				+ " AND a.TransactionStatusID=1 ORDER BY b.OrderDetailID ";
+				+ " AND a.TransactionStatusID=1 "; 
+		if(seatId != 0)
+			strSql += " AND b.SeatID=" + seatId;
+		
+		strSql += " ORDER BY b.OrderDetailID ";
 
 		openDatabase();
 		Cursor cursor = dbHelper.myDataBase.rawQuery(strSql, null);
@@ -722,6 +738,8 @@ public abstract class POSOrderBase {
 				mi.setMemberId(cursor.getInt(cursor.getColumnIndex("MemberID")));
 				mi.setOrderDetailId(cursor.getInt(cursor
 						.getColumnIndex("OrderDetailID")));
+				mi.setSeatId(cursor.getInt(cursor.getColumnIndex("SeatID")));
+				mi.setSeatName(cursor.getString(cursor.getColumnIndex("SeatName")));
 				mi.setProductID(cursor.getInt(cursor
 						.getColumnIndex("ProductID")));
 				mi.setMenuName(cursor.getString(cursor
@@ -2265,7 +2283,7 @@ public abstract class POSOrderBase {
 			int productId, String productName, int productTypeId, int saleMode,
 			double qty, double productPrice, double vatAmount,
 			double memberDiscountAmount, double priceDiscountAmount,
-			int parentOrderDetailId, double discountValue) {
+			int parentOrderDetailId, double discountValue, int seatId, String seatName) {
 
 		openDatabase();
 		int maxOrderDetailId = getMaxOrderDetailId(transactionId);
@@ -2279,6 +2297,8 @@ public abstract class POSOrderBase {
 		cv.put("ProductName", productName);
 		cv.put("ProductTypeID", productTypeId);
 		cv.put("SaleMode", saleMode);
+		cv.put("SeatID", seatId);
+		cv.put("SeatName", seatName);
 		cv.put("Qty", qty);
 		cv.put("PricePerUnit", productPrice);
 		cv.put("OrderComment", "");

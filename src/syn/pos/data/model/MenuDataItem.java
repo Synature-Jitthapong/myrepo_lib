@@ -39,14 +39,28 @@ public class MenuDataItem {
 	private int saleMode2;
 	private int memberId;
 	private String productBarcode;
-	
+	private int seatId;
+	private String seatName;
+
 	private String holdDate;
 	private String holdBy;
 	private double holdQty;
 	
 	public List<MenuGroups.MenuComment> menuCommentList;
 	public List<ProductGroups.PComponentSet> pCompSetLst;
-	
+		
+	public String getSeatName() {
+		return seatName;
+	}
+	public void setSeatName(String seatName) {
+		this.seatName = seatName;
+	}
+	public int getSeatId() {
+		return seatId;
+	}
+	public void setSeatId(int seatId) {
+		this.seatId = seatId;
+	}
 	public String getMenuShortName() {
 		return MenuShortName;
 	}
