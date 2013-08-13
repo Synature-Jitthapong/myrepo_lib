@@ -154,10 +154,17 @@ public class POSData_OrderTransInfo {
 		private double fDiscountPrice; // Per Item
 		private int iSaleMode;
 		private String szOrderComment;
+		private int iSeatID;
 
 		public List<POSData_CommentInfo> xListCommentInfo;
         public List<POSData_ChildOrderSetLinkType7Info> xListChildOrderSetLinkType7;
 
+		public int getiSeatID() {
+			return iSeatID;
+		}
+		public void setiSeatID(int iSeatID) {
+			this.iSeatID = iSeatID;
+		}
 		public int getiSaleMode() {
 			return iSaleMode;
 		}

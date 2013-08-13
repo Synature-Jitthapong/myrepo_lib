@@ -10,6 +10,7 @@ public class ShopData {
 	public List<GlobalProperty> GlobalProperty;
 	public List<Language> Language;
 	public List<ProgramFeature> ProgramFeature;
+	public List<SeatNo> SeatNo;
 	
 	public List<ShopProperty> getShopProperty() {
 		return ShopProperty;
@@ -543,6 +544,24 @@ public class ShopData {
 		}
 		public void setFeatureDesc(String featureDesc) {
 			FeatureDesc = featureDesc;
+		}
+	}
+	
+	public static class SeatNo{
+		private int SeatID;
+		private String SeatName;
+		
+		public int getSeatID() {
+			return SeatID;
+		}
+		public void setSeatID(int seatID) {
+			SeatID = seatID;
+		}
+		public String getSeatName() {
+			return SeatName;
+		}
+		public void setSeatName(String seatName) {
+			SeatName = seatName;
 		}
 	}
 }

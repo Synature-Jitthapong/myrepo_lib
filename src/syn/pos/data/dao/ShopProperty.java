@@ -21,7 +21,7 @@ public class ShopProperty {
 			dbHelper = new DataBaseHelper(context);
 		c = context;
 	}
-
+	
 	public ShopData.Language getLanguage(){
 		ShopData.Language lang = new ShopData.Language();
 		lang.setLangCode("en");
@@ -124,6 +124,29 @@ public class ShopProperty {
 		return sd;
 	}
 
+	public List<ShopData.SeatNo> getSeatNo(){
+		List<ShopData.SeatNo> seatLst = 
+				new ArrayList<ShopData.SeatNo>();
+		
+		dbHelper.openDataBase();
+		
+		String strSql = "SELECT * FROM SeatNo";
+		
+		Cursor cursor = dbHelper.myDataBase.rawQuery(strSql, null);
+		if(cursor.moveToFirst()){
+			do{
+				ShopData.SeatNo seat = new ShopData.SeatNo();
+				seat.setSeatID(cursor.getInt(cursor.getColumnIndex("SeatID")));
+				seat.setSeatName(cursor.getString(cursor.getColumnIndex("SeatName")));
+				seatLst.add(seat);
+			}while(cursor.moveToNext());
+		}
+		cursor.close();
+		
+		dbHelper.closeDataBase();
+		return seatLst;
+	}
+	
 	public ShopData.ShopProperty getShopProper() {
 		dbHelper.openDataBase();
 
@@ -234,6 +257,48 @@ public class ShopProperty {
 		dbHelper.closeDataBase();
 	}
 
+	public List<ShopData.StaffPermission> getPermission(){
+		List<ShopData.StaffPermission> permissionLst = 
+				new ArrayList<ShopData.StaffPermission>();
+		
+		dbHelper.openDataBase();
+		
+		String strSql = "SELECT * FROM StaffPermission";
+		
+		Cursor cursor = dbHelper.myDataBase.rawQuery(strSql, null);
+		if(cursor.moveToFirst()){
+			do{
+				ShopData.StaffPermission permission = 
+						new ShopData.StaffPermission();
+				permission.setPermissionItemID(cursor.getInt(cursor.getColumnIndex("PermissionItemID")));
+				permissionLst.add(permission);
+			}while(cursor.moveToNext());
+		}
+		cursor.close();
+		
+		dbHelper.closeDataBase();
+		
+		return permissionLst;
+	}
+	
+	public void insertStaffPermissionData(List<ShopData.StaffPermission> permissionLst) {
+		dbHelper.openDataBase();
+		try {
+			dbHelper.myDataBase.execSQL("DELETE FROM StaffPermission");
+
+			for (ShopData.StaffPermission s : permissionLst) {
+				ContentValues cv = new ContentValues();
+				cv.put("StaffRoleID", s.getStaffRoleID());
+				cv.put("PermissionItemID", s.getPermissionItemID());
+
+				dbHelper.myDataBase.insert("StaffPermission", null, cv);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		dbHelper.closeDataBase();
+	}
+	
 	public void insertStaffPermissionData(ShopData shopData) {
 		dbHelper.openDataBase();
 		try {
@@ -273,4 +338,23 @@ public class ShopProperty {
 		dbHelper.closeDataBase();
 	}
 
+	public void insertSeatNo(ShopData shopData){
+		dbHelper.openDataBase();
+		
+		try {
+			dbHelper.myDataBase.execSQL("DELETE FROM SeatNo");
+			
+			for (ShopData.SeatNo seat : shopData.SeatNo){
+				ContentValues cv = new ContentValues();
+				cv.put("SeatID", seat.getSeatID());
+				cv.put("SeatName", seat.getSeatName());
+				
+				dbHelper.myDataBase.insert("SeatNo", null, cv);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		dbHelper.closeDataBase();
+	}
 }

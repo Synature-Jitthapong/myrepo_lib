@@ -59,8 +59,16 @@ public class OrderSendData {
 		private String szOrderTime;
 		private String szFinishTime;
 		private int iOrderWaitMinTime;
-		
-		
+		private int iSeatID;
+
+		public int getiSeatID() {
+			return iSeatID;
+		}
+
+		public void setiSeatID(int iSeatID) {
+			this.iSeatID = iSeatID;
+		}
+
 		public int getiOrderWaitMinTime() {
 			return iOrderWaitMinTime;
 		}
