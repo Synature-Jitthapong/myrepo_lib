@@ -30,7 +30,8 @@ public class MenuUtil {
 				" OrderStatusID INTEGER, " +
 				" ProductID INTEGER, " +
 				" ProductName TEXT, " +
-				" ProductQty REAL" +
+				" ProductQty REAL, " +
+				" SeatID INTEGER " +
 				" )";
 		dbHelper.myDataBase.execSQL(strSql);
 		dbHelper.closeDataBase();
@@ -47,7 +48,8 @@ public class MenuUtil {
 				" OrderStatusID INTEGER, " +
 				" ProductID INTEGER, " +
 				" ProductName TEXT, " +
-				" ProductQty REAL" +
+				" ProductQty REAL, " +
+				" SeatID INTEGER " +
 				" )";
 		dbHelper.myDataBase.execSQL(strSql);
 		
@@ -57,7 +59,8 @@ public class MenuUtil {
 				" OrderStatusID INTEGER, " +
 				" ProductID INTEGER, " +
 				" ProductName TEXT, " +
-				" ProductQty REAL" +
+				" ProductQty REAL, " +
+				" SeatID INTEGER " +
 				" )";
 		dbHelper.myDataBase.execSQL(strSql);
 		
@@ -107,7 +110,7 @@ public class MenuUtil {
 		OrderSendData.OrderDetail detail = new OrderSendData.OrderDetail();
 		
 		String strSql = " SELECT OrderDetailID, OrderStatusID, ProductID, ProductName, " +
-				" SUM(ProductQty) AS TotalQty " +
+				" SUM(ProductQty) AS TotalQty, SeatID " +
 				" FROM " + destTableName +
 				" WHERE OrderDetailID=" + orderDetailId +
 				" GROUP BY OrderDetailID";
@@ -122,7 +125,7 @@ public class MenuUtil {
 				detail.setiProductID(cursor.getInt(cursor.getColumnIndex("ProductID")));
 				detail.setSzProductName(cursor.getString(cursor.getColumnIndex("ProductName")));
 				detail.setfItemQty(cursor.getDouble(cursor.getColumnIndex("TotalQty")));
-				
+				detail.setiSeatID(cursor.getInt(cursor.getColumnIndex("SeatID")));
 			}while(cursor.moveToNext());
 		}
 		cursor.close();
@@ -136,7 +139,7 @@ public class MenuUtil {
 				new ArrayList<OrderSendData.OrderDetail>();
 		
 		String strSql = " SELECT OrderDetailID, OrderStatusID, ProductID, ProductName, " +
-				" SUM(ProductQty) AS TotalQty " +
+				" SUM(ProductQty) AS TotalQty, SeatID " +
 				" FROM " + destTableName + 
 				" GROUP BY OrderDetailID";
 		
@@ -151,7 +154,7 @@ public class MenuUtil {
 				detail.setiProductID(cursor.getInt(cursor.getColumnIndex("ProductID")));
 				detail.setSzProductName(cursor.getString(cursor.getColumnIndex("ProductName")));
 				detail.setfItemQty(cursor.getDouble(cursor.getColumnIndex("TotalQty")));
-				
+				detail.setiSeatID(cursor.getInt(cursor.getColumnIndex("SeatID")));
 				detailLst.add(detail);
 			}while(cursor.moveToNext());
 		}
@@ -166,7 +169,7 @@ public class MenuUtil {
 		OrderSendData.OrderDetail detail = new OrderSendData.OrderDetail();
 		
 		String strSql = " SELECT OrderDetailID, OrderStatusID, ProductID, ProductName, " +
-				" SUM(ProductQty) AS TotalQty " +
+				" SUM(ProductQty) AS TotalQty, SeatID " +
 				" FROM " + sourceTableName + 
 				" WHERE OrderDetailID=" + orderDetailId +
 				" GROUP BY OrderDetailID";
@@ -181,6 +184,7 @@ public class MenuUtil {
 				detail.setiProductID(cursor.getInt(cursor.getColumnIndex("ProductID")));
 				detail.setSzProductName(cursor.getString(cursor.getColumnIndex("ProductName")));
 				detail.setfItemQty(cursor.getDouble(cursor.getColumnIndex("TotalQty")));
+				detail.setiSeatID(cursor.getInt(cursor.getColumnIndex("SeatID")));
 			}while(cursor.moveToNext());
 		}
 		cursor.close();
@@ -194,7 +198,7 @@ public class MenuUtil {
 				new ArrayList<OrderSendData.OrderDetail>();
 		
 		String strSql = " SELECT OrderDetailID, OrderStatusID, ProductID, ProductName," +
-				" SUM(ProductQty) AS TotalQty " +
+				" SUM(ProductQty) AS TotalQty, SeatID " +
 				" FROM " + sourceTableName + 
 				" GROUP BY OrderDetailID";
 		
@@ -209,7 +213,7 @@ public class MenuUtil {
 				detail.setiProductID(cursor.getInt(cursor.getColumnIndex("ProductID")));
 				detail.setSzProductName(cursor.getString(cursor.getColumnIndex("ProductName")));
 				detail.setfItemQty(cursor.getDouble(cursor.getColumnIndex("TotalQty")));
-				
+				detail.setiSeatID(cursor.getInt(cursor.getColumnIndex("SeatID")));
 				detailLst.add(detail);
 			}while(cursor.moveToNext());
 		}
@@ -240,7 +244,7 @@ public class MenuUtil {
 		List<OrderSendData.OrderDetail> detailLst = 
 				new ArrayList<OrderSendData.OrderDetail>();
 		
-		String strSql = " SELECT OrderDetailID, OrderStatusID, ProductID, ProductName, ProductQty " +
+		String strSql = " SELECT OrderDetailID, OrderStatusID, ProductID, ProductName, ProductQty, SeatID " +
 				" FROM " + menuTableName;
 		
 		dbHelper.openDataBase();
@@ -254,6 +258,7 @@ public class MenuUtil {
 				detail.setiProductID(cursor.getInt(cursor.getColumnIndex("ProductID")));
 				detail.setSzProductName(cursor.getString(cursor.getColumnIndex("ProductName")));
 				detail.setfItemQty(cursor.getDouble(cursor.getColumnIndex("ProductQty")));
+				detail.setiSeatID(cursor.getInt(cursor.getColumnIndex("SeatID")));
 				
 				detailLst.add(detail);
 			}while(cursor.moveToNext());
@@ -265,7 +270,8 @@ public class MenuUtil {
 	}
 	
 	// re move menu
-	public void reMoveMenu(int orderId, int orderStatusId, int productId, String productName, double productQty){
+	public void reMoveMenu(int orderId, int orderStatusId, int productId, String productName, 
+			double productQty, int seatId){
 		int movedQty = getReMovedMenu(orderId, productId);
 		
 		dbHelper.openDataBase();
@@ -282,6 +288,7 @@ public class MenuUtil {
 			cv.put("ProductID", productId);
 			cv.put("ProductName", productName);
 			cv.put("ProductQty", 1);
+			cv.put("SeatID", seatId);
 			dbHelper.myDataBase.insert(sourceTableName, null, cv);
 		}
 		dbHelper.closeDataBase();
@@ -322,7 +329,8 @@ public class MenuUtil {
 	}
 	
 	// move menu
-	public void moveMenu(int orderId, int orderStatusId, int productId, String productName, double productQty){
+	public void moveMenu(int orderId, int orderStatusId, int productId, String productName, 
+			double productQty, int seatId){
 		int movedQty = getMovedMenu(orderId, productId);
 		
 		dbHelper.openDataBase();
@@ -339,6 +347,8 @@ public class MenuUtil {
 			cv.put("ProductID", productId);
 			cv.put("ProductName", productName);
 			cv.put("ProductQty", 1);
+			cv.put("SeatID", seatId);
+			
 			dbHelper.myDataBase.insert(destTableName, null, cv);
 		}
 		dbHelper.closeDataBase();
@@ -376,6 +386,7 @@ public class MenuUtil {
 				cv.put("ProductID", detail.getiProductID());
 				cv.put("ProductName", detail.getSzProductName());
 				cv.put("ProductQty", detail.getfItemQty());
+				cv.put("SeatID", detail.getiSeatID());
 				dbHelper.myDataBase.insert(menuTableName, null, cv);
 			}
 			dbHelper.closeDataBase();
@@ -395,6 +406,7 @@ public class MenuUtil {
 						cv.put("ProductID", detail.getiProductID());
 						cv.put("ProductName", detail.getSzProductName());
 						cv.put("ProductQty", detail.getfItemQty());
+						cv.put("SeatID", detail.getiSeatID());
 						dbHelper.myDataBase.insert(sourceTableName, null, cv);
 					}
 				}

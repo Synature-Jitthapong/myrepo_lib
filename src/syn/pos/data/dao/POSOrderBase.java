@@ -697,7 +697,7 @@ public abstract class POSOrderBase {
 
 	// list order
 	public List<syn.pos.data.model.MenuDataItem> listOrder(int transactionId,
-			int computerId, int seatId) {
+			int computerId) {
 		List<syn.pos.data.model.MenuDataItem> ml = new ArrayList<syn.pos.data.model.MenuDataItem>();
 
 		String strSql = "SELECT a.TransactionID, a.ComputerID, a.MemberID, b.OrderDetailID, "
@@ -719,11 +719,8 @@ public abstract class POSOrderBase {
 				+ transactionId
 				+ " AND a.ComputerID="
 				+ computerId
-				+ " AND a.TransactionStatusID=1 "; 
-		if(seatId != 0)
-			strSql += " AND b.SeatID=" + seatId;
-		
-		strSql += " ORDER BY b.OrderDetailID ";
+				+ " AND a.TransactionStatusID=1 "
+				+ " ORDER BY b.OrderDetailID ";
 
 		openDatabase();
 		Cursor cursor = dbHelper.myDataBase.rawQuery(strSql, null);

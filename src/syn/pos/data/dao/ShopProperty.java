@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import syn.pos.data.model.ShopData;
+import syn.pos.data.model.ShopData.SeatNo;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -124,6 +125,27 @@ public class ShopProperty {
 		return sd;
 	}
 
+	public ShopData.SeatNo getSeatNo(int seatId){
+		ShopData.SeatNo seat = new ShopData.SeatNo();
+		
+		dbHelper.openDataBase();
+		
+		String strSql = "SELECT * FROM SeatNo " +
+				" WHERE SeatID=" + seatId;
+		
+		Cursor cursor = dbHelper.myDataBase.rawQuery(strSql, null);
+		if(cursor.moveToFirst()){
+			seat.setSeatID(cursor.getInt(cursor.getColumnIndex("SeatID")));
+			seat.setSeatName(cursor.getString(cursor.getColumnIndex("SeatName")));
+			cursor.moveToNext();
+		}
+		cursor.close();
+		
+		dbHelper.closeDataBase();
+		
+		return seat;
+	}
+	
 	public List<ShopData.SeatNo> getSeatNo(){
 		List<ShopData.SeatNo> seatLst = 
 				new ArrayList<ShopData.SeatNo>();
@@ -257,6 +279,25 @@ public class ShopProperty {
 		dbHelper.closeDataBase();
 	}
 
+	public boolean chkAccessPocketPermission(){
+		boolean isFound = false;
+		dbHelper.openDataBase();
+		
+		String strSql = "SELECT * FROM StaffPermission " +
+				" WHERE PermissionItemID = 155";
+		
+		Cursor cursor = dbHelper.myDataBase.rawQuery(strSql, null);
+		
+		if(cursor.moveToFirst()){
+			isFound = true;
+		}
+		cursor.close();
+		
+		dbHelper.closeDataBase();
+		
+		return isFound;
+	}
+	
 	public List<ShopData.StaffPermission> getPermission(){
 		List<ShopData.StaffPermission> permissionLst = 
 				new ArrayList<ShopData.StaffPermission>();
