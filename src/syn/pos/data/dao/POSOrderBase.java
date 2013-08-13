@@ -2369,9 +2369,7 @@ public abstract class POSOrderBase {
 		int transactionId = 0;
 		String strSql = " SELECT TransactionID " + " FROM "
 				+ ORDER_TRANSACTION_TABLE + " WHERE TransactionStatusID=1 "
-				+ " AND ComputerID=" + computerId + " AND SaleDate='"
-				+ globalVar.dateFormat.format(globalVar.date) + "'"
-				+ " ORDER BY TransactionID DESC LIMIT 1";
+				+ " AND ComputerID=" + computerId;
 
 		openDatabase();
 		Cursor cursor = dbHelper.myDataBase.rawQuery(strSql, null);
