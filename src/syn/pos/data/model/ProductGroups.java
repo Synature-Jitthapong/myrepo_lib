@@ -725,8 +725,7 @@ public class ProductGroups {
 		private double ChildProductAmount;
 		private double FlexibleProductPrice;
 		private double FlexibleIncludePrice;
-		
-		
+
 		public int getOrderSetID() {
 			return orderSetId;
 		}

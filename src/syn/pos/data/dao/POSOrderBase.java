@@ -974,11 +974,10 @@ public abstract class POSOrderBase {
 	}
 
 	/***** order type 7 *********/
-
 	public double countOrderSet(int transactionId, int orderId, int pGroupId) {
 		double count = 0;
 
-		String strSql = "SELECT SUM(ProductQty) " + " FROM "
+		String strSql = "SELECT SUM(ProductWeightAmount) " + " FROM "
 				+ ORDER_SET_TABLE_TMP + " WHERE TransactionID=" + transactionId
 				+ " AND OrderDetailID=" + orderId + " AND PGroupID=" + pGroupId
 				+ " GROUP BY PGroupID";
@@ -1276,7 +1275,8 @@ public abstract class POSOrderBase {
 				pcg.pCompSetLst = new ArrayList<ProductGroups.PComponentSet>();
 
 				strSql = "SELECT a.OrderSetID, a.OrderDetailID, a.PGroupID, a.ProductID, "
-						+ " a.ProductPrice, a.ProductQty, a.SetGroupNo, a.Comment, b.MenuName_0," +
+						+ " a.ProductPrice, a.ProductQty, a.ProductWeightAmount, "
+						+ " a.SetGroupNo, a.Comment, b.MenuName_0," +
 						" b.MenuName_1, b.MenuName_2, b.MenuShortName_0, b.MenuShortName_1, "
 						+ " b.MenuImageLink "
 						+ " FROM "
@@ -1310,6 +1310,7 @@ public abstract class POSOrderBase {
 								.getColumnIndex("ProductPrice")));
 						pgs.setProductQty(cursor2.getDouble(cursor2
 								.getColumnIndex("ProductQty")));
+						pgs.setChildProductAmount(cursor2.getDouble(cursor2.getColumnIndex("ProductWeightAmount")));
 						pgs.setSetGroupNo(cursor2.getInt(cursor2
 								.getColumnIndex("SetGroupNo")));
 						pgs.setOrderComment(cursor2.getString(cursor2
@@ -1479,9 +1480,9 @@ public abstract class POSOrderBase {
 	}
 
 	public void updateOrderSet(int transactionId, int orderDetailId,
-			int OrderSetID, double qty) {
+			int OrderSetID, double qty, double productWeightAmount) {
 		String strSql = "UPDATE " + ORDER_SET_TABLE_TMP + " SET ProductQty="
-				+ qty + ", " + " UpdateTime='"
+				+ qty + ", ProductWeightAmount=" + productWeightAmount + ", UpdateTime='"
 				+ globalVar.dateTimeFormat.format(globalVar.date) + "' "
 				+ " WHERE TransactionID=" + transactionId
 				+ " AND OrderDetailID=" + orderDetailId + " AND OrderSetID="
@@ -1509,6 +1510,7 @@ public abstract class POSOrderBase {
 				+ " SetGroupNo  INTEGER NOT NULL DEFAULT 0, "
 				+ " ProductPrice  REAL NOT NULL DEFAULT 0, "
 				+ " ProductQty  REAL NOT NULL DEFAULT 0, "
+				+ " ProductWeightAmount REAL NOT NULL DEFAULT 0, "
 				+ " Comment  TEXT NOT NULL, "
 				+ " UpdateTime  TEXT, "
 				+ " PRIMARY KEY (OrderSetID, TransactionID ASC, OrderDetailID ASC) "
@@ -1602,7 +1604,7 @@ public abstract class POSOrderBase {
 
 	public int addOrderSet(int transactionId, int orderId, int pGroupId,
 			int setGroupNo, int productId, double productPrice,
-			double productQty, String comment) {
+			double productQty, double productWeightAmount, String comment) {
 
 		openDatabase();
 		int maxOrderSetId = getMaxOrderSetId(transactionId, orderId);
@@ -1616,6 +1618,7 @@ public abstract class POSOrderBase {
 		cv.put("SetGroupNo", setGroupNo);
 		cv.put("ProductPrice", productPrice);
 		cv.put("ProductQty", productQty);
+		cv.put("ProductWeightAmount", productWeightAmount);
 		cv.put("Comment", comment);
 
 		try {
@@ -2096,6 +2099,26 @@ public abstract class POSOrderBase {
 	}
 
 	// update orderDetail
+	public Boolean updateSeatOrderDetail(int transactionId, int orderDetailId,
+			int seatId, String seatName) {
+		Boolean isSuccess = false;
+		String strSql = "UPDATE " + ORDER_DETAIL_TABLE + " SET SeatID=" + seatId
+				+ ", SeatName='" + seatName + "', "
+				+ " UpdateTime='" + globalVar.dateTimeFormat.format(globalVar.date) + "' "
+				+ " WHERE TransactionID=" + transactionId
+				+ " AND OrderDetailID=" + orderDetailId;
+
+		openDatabase();
+		try {
+			dbHelper.myDataBase.execSQL(strSql);
+		} catch (SQLException e) {
+			Log.appendLog(context, "updateOrderDetail : " + e.getMessage());
+		}
+		closeDatabase();
+
+		return isSuccess;
+	}
+	
 	public Boolean updateOrderDetail(int transactionId, int orderDetailId,
 			int saleMode, String orderComment) {
 		Boolean isSuccess = false;

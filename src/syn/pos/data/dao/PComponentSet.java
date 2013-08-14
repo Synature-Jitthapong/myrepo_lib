@@ -123,6 +123,26 @@ public class PComponentSet {
 		return pCompSetLst;
 	}
 	
+	public double getChildProductAmount(int pCompGroupId, int productId){
+		double childAmount = 0.0d;
+		dbHelper.openDataBase();
+		
+		String strSql = "SELECT ChildProductAmount " +
+				" FROM PComponentSet " +
+				" WHERE PGroupID=" + pCompGroupId + 
+				" AND ProductID=" + productId;
+		
+		Cursor cursor = dbHelper.myDataBase.rawQuery(strSql, null);
+		
+		if(cursor.moveToFirst()){
+			childAmount = cursor.getDouble(0);
+		}
+		cursor.close();
+		
+		dbHelper.closeDataBase();
+		return childAmount;
+	}
+	
 	public List<ProductGroups.PComponentSet> getPComponentSet(int pCompGroupId) {
 		List<ProductGroups.PComponentSet> pCompSetLst = new ArrayList<ProductGroups.PComponentSet>();
 		dbHelper.openDataBase();
