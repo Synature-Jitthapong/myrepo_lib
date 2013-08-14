@@ -130,7 +130,7 @@ public class PComponentSet {
 		String strSql = "SELECT ChildProductAmount " +
 				" FROM PComponentSet " +
 				" WHERE PGroupID=" + pCompGroupId + 
-				" AND ProductID=" + productId;
+				" AND ChildProductID=" + productId;
 		
 		Cursor cursor = dbHelper.myDataBase.rawQuery(strSql, null);
 		
