@@ -11,7 +11,8 @@ import syn.pos.data.model.*;
 
 public class MenuGroup{
 	private DataBaseHelper dbHelper;
-	private String strSql = "SELECT * FROM MenuGroup WHERE MenuGroupType=0 ORDER BY MenuGroupOrdering";
+	private String strSql = "SELECT * FROM MenuGroup WHERE MenuGroupType=0 " +
+			" AND Activate=1 ORDER BY MenuGroupOrdering";
 
 	public MenuGroup(Context context) {
 		dbHelper = new DataBaseHelper(context);
@@ -33,6 +34,7 @@ public class MenuGroup{
 				cv.put("MenuGroupType", mg.getMenuGroupType());
 				cv.put("MenuGroupOrdering", mg.getMenuGroupOrdering());
 				cv.put("UpdateDate", mg.getUpdateDate());
+				cv.put("Activate", mg.getActivate());
 
 				dbHelper.myDataBase.insert("MenuGroup", null, cv);
 				isSuccess = true;

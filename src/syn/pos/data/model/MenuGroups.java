@@ -408,7 +408,14 @@ public class MenuGroups {
 		private String MenuDeptName_5;
 		private int MenuDeptOrdering;
 		private String UpdateDate;
+		private int Activate;
 		
+		public int getActivate() {
+			return Activate;
+		}
+		public void setActivate(int activate) {
+			Activate = activate;
+		}
 		public int getMenuDeptID() {
 			return MenuDeptID;
 		}
@@ -488,7 +495,14 @@ public class MenuGroups {
 		private int MenuGroupType;
 		private int MenuGroupOrdering;
 		private String UpdateDate;
+		private int Activate;
 		
+		public int getActivate() {
+			return Activate;
+		}
+		public void setActivate(int activate) {
+			Activate = activate;
+		}
 		public int getMenuGroupID() {
 			return MenuGroupID;
 		}

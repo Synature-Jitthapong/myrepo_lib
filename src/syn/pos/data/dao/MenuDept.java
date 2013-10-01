@@ -11,17 +11,17 @@ import android.database.SQLException;
 
 public class MenuDept {
 	private DataBaseHelper dbHelper;
-	private String strSql = "SELECT * FROM MenuDept";
+	private String strSql = "SELECT * FROM MenuDept ";
 
 	public MenuDept(Context context) {
 		dbHelper = new DataBaseHelper(context);
-		strSql += " ORDER BY MenuDeptOrdering, MenuDeptName_0";
+		strSql += " WHERE Activate=1 ORDER BY MenuDeptOrdering, MenuDeptName_0 ";
 	}
 
 	public MenuDept(Context context, int menuGroupId) {
 		dbHelper = new DataBaseHelper(context);
 		if (menuGroupId != 0)
-			strSql += " WHERE MenuGroupID=" + menuGroupId;
+			strSql += " WHERE MenuGroupID=" + menuGroupId + " AND Activate=1 ";
 		strSql += " ORDER BY MenuDeptOrdering, MenuDeptName_0";
 	}
 
@@ -41,6 +41,7 @@ public class MenuDept {
 				cv.put("MenuDeptName_3", md.getMenuDeptName_3());
 				cv.put("MenuDeptOrdering", md.getMenuDeptOrdering());
 				cv.put("UpdateDate", md.getUpdateDate());
+				cv.put("Activate", md.getActivate());
 
 				dbHelper.myDataBase.insert("MenuDept", null, cv);
 				isSuccess = true;
