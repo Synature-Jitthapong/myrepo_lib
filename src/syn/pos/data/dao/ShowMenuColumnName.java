@@ -134,5 +134,12 @@ public class ShowMenuColumnName {
 		public void setUseThis(int isUseThis) {
 			this.isUseThis = isUseThis;
 		}
+
+		@Override
+		public String toString() {
+			return showMenuColName;
+		}
+		
+		
 	}
 }
