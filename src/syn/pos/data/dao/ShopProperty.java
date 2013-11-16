@@ -125,6 +125,52 @@ public class ShopProperty {
 		return sd;
 	}
 
+	public ShopData.CourseInfo getCourse(int courseId){
+		ShopData.CourseInfo course = new ShopData.CourseInfo();
+		
+		dbHelper.openDataBase();
+		
+		Cursor cursor = dbHelper.myDataBase.rawQuery("SELECT * " +
+				" FROM CourseInfo " +
+				" WHERE CourseID=" + courseId, null);
+		
+		if(cursor.moveToFirst()){
+			do{
+				course.setCourseID(cursor.getInt(cursor.getColumnIndex("CourseID")));
+				course.setCourseName(cursor.getString(cursor.getColumnIndex("CourseName")));
+				course.setCourseShortName(cursor.getString(cursor.getColumnIndex("CourseShortName")));
+			}while(cursor.moveToNext());
+		}
+		cursor.close();
+		dbHelper.closeDataBase();
+		
+		return course;
+	}
+	
+	public List<ShopData.CourseInfo> listAllCourse(){
+		List<ShopData.CourseInfo> courseLst = 
+				new ArrayList<ShopData.CourseInfo>();
+		
+		dbHelper.openDataBase();
+		
+		Cursor cursor = dbHelper.myDataBase.rawQuery("SELECT * " +
+				" FROM CourseInfo", null);
+		
+		if(cursor.moveToFirst()){
+			do{
+				ShopData.CourseInfo course = new ShopData.CourseInfo();
+				course.setCourseID(cursor.getInt(cursor.getColumnIndex("CourseID")));
+				course.setCourseName(cursor.getString(cursor.getColumnIndex("CourseName")));
+				course.setCourseShortName(cursor.getString(cursor.getColumnIndex("CourseShortName")));
+				courseLst.add(course);
+			}while(cursor.moveToNext());
+		}
+		cursor.close();
+		dbHelper.closeDataBase();
+		
+		return courseLst;
+	}
+	
 	public ShopData.SeatNo getSeatNo(int seatId){
 		ShopData.SeatNo seat = new ShopData.SeatNo();
 		
@@ -379,7 +425,20 @@ public class ShopProperty {
 		dbHelper.closeDataBase();
 	}
 
-	public void insertSeatNo(ShopData shopData){
+	public void insertCourse(ShopData shopData) throws SQLException{
+		dbHelper.openDataBase();
+		dbHelper.myDataBase.execSQL("DELETE FROM CourseInfo");
+		for(ShopData.CourseInfo course : shopData.CourseInfo){
+			ContentValues cv = new ContentValues();
+			cv.put("CourseID", course.getCourseID());
+			cv.put("CourseName", course.getCourseName());
+			cv.put("CourseShortName", course.getCourseShortName());
+			dbHelper.myDataBase.insertOrThrow("CourseInfo", null, cv);
+		}
+		dbHelper.closeDataBase();
+	}
+	
+	public void insertSeatNo(ShopData shopData) throws SQLException{
 		dbHelper.openDataBase();
 		
 		try {

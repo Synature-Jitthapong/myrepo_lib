@@ -11,6 +11,7 @@ public class ShopData {
 	public List<Language> Language;
 	public List<ProgramFeature> ProgramFeature;
 	public List<SeatNo> SeatNo;
+	public List<CourseInfo> CourseInfo;
 	
 	public List<ShopProperty> getShopProperty() {
 		return ShopProperty;
@@ -544,6 +545,31 @@ public class ShopData {
 		}
 		public void setFeatureDesc(String featureDesc) {
 			FeatureDesc = featureDesc;
+		}
+	}
+	
+	public static class CourseInfo{
+		private int CourseID;
+		private String CourseName;
+		private String CourseShortName;
+		
+		public int getCourseID() {
+			return CourseID;
+		}
+		public void setCourseID(int courseID) {
+			CourseID = courseID;
+		}
+		public String getCourseName() {
+			return CourseName;
+		}
+		public void setCourseName(String courseName) {
+			CourseName = courseName;
+		}
+		public String getCourseShortName() {
+			return CourseShortName;
+		}
+		public void setCourseShortName(String courseShortName) {
+			CourseShortName = courseShortName;
 		}
 	}
 	

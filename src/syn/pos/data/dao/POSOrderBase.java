@@ -226,7 +226,8 @@ public abstract class POSOrderBase {
 
 		String strSql = "SELECT a.TransactionID, a.ComputerID, b.OrderDetailID, "
 				+ " b.ProductID,  b.Qty, b.PricePerUnit, b.TotalRetailPrice, b.SaleMode, "
-				+ " b.OrderComment, b.SeatID, b.SeatName, c.ProductTypeID, d.MenuName_0, d.MenuName_1, d.MenuName_2, "
+				+ " b.OrderComment, b.SeatID, b.SeatName, b.CourseID, b.CourseName, "
+				+ " c.ProductTypeID, d.MenuName_0, d.MenuName_1, d.MenuName_2, "
 				+ " d.MenuShortName_0, d.MenuShortName_1, d.MenuImageLink "
 				+ " FROM "
 				+ ORDER_TRANSACTION_TABLE
@@ -265,6 +266,8 @@ public abstract class POSOrderBase {
 						.getColumnIndex("ProductID")));
 				mi.setSeatId(cursor.getInt(cursor.getColumnIndex("SeatID")));
 				mi.setSeatName(cursor.getString(cursor.getColumnIndex("SeatName")));
+				mi.setCourseId(cursor.getInt(cursor.getColumnIndex("CourseID")));
+				mi.setCourseName(cursor.getString(cursor.getColumnIndex("CourseName")));
 				mi.setMenuName(cursor.getString(cursor
 						.getColumnIndex("MenuName_0")));
 				mi.setMenuName1(cursor.getString(cursor
@@ -464,7 +467,8 @@ public abstract class POSOrderBase {
 
 		String strSql = "SELECT a.TransactionID, a.ComputerID, b.OrderDetailID, "
 				+ " b.ProductID,  b.Qty, b.PricePerUnit, b.TotalRetailPrice, b.SaleMode, "
-				+ " b.OrderComment, b.SeatID, b.SeatName, c.ProductTypeID, d.MenuName_0, d.MenuName_1, d.MenuName_2, "
+				+ " b.OrderComment, b.SeatID, b.SeatName, b.CourseID, b.CourseName, " 
+				+ " c.ProductTypeID, d.MenuName_0, d.MenuName_1, d.MenuName_2, "
 				+ " d.MenuShortName_0, d.MenuShortName_1, d.MenuImageLink "
 				+ " FROM "
 				+ ORDER_TRANSACTION_TABLE
@@ -502,6 +506,8 @@ public abstract class POSOrderBase {
 						.getColumnIndex("OrderDetailID")));
 				mi.setSeatId(cursor.getInt(cursor.getColumnIndex("SeatID")));
 				mi.setSeatName(cursor.getString(cursor.getColumnIndex("SeatName")));
+				mi.setCourseId(cursor.getInt(cursor.getColumnIndex("CourseID")));
+				mi.setCourseName(cursor.getString(cursor.getColumnIndex("CourseName")));
 				mi.setProductID(cursor.getInt(cursor
 						.getColumnIndex("ProductID")));
 				mi.setMenuName(cursor.getString(cursor
@@ -701,7 +707,8 @@ public abstract class POSOrderBase {
 		List<syn.pos.data.model.MenuDataItem> ml = new ArrayList<syn.pos.data.model.MenuDataItem>();
 
 		String strSql = "SELECT a.TransactionID, a.ComputerID, a.MemberID, b.OrderDetailID, "
-				+ " b.ProductID, b.SeatID, b.SeatName, d.MenuName_0, d.MenuName_1, d.MenuName_2, " 
+				+ " b.ProductID, b.SeatID, b.SeatName, b.CourseID, b.CourseName, "
+				+ " d.MenuName_0, d.MenuName_1, d.MenuName_2, " 
 				+ " d.MenuShortName_0, d.MenuShortName_1, b.Qty, b.PricePerUnit, b.TotalRetailPrice, "
 				+ " b.OrderComment, b.SaleMode, c.ProductTypeID "
 				+ " FROM "
@@ -737,6 +744,8 @@ public abstract class POSOrderBase {
 						.getColumnIndex("OrderDetailID")));
 				mi.setSeatId(cursor.getInt(cursor.getColumnIndex("SeatID")));
 				mi.setSeatName(cursor.getString(cursor.getColumnIndex("SeatName")));
+				mi.setCourseId(cursor.getInt(cursor.getColumnIndex("CourseID")));
+				mi.setCourseName(cursor.getString(cursor.getColumnIndex("CourseName")));
 				mi.setProductID(cursor.getInt(cursor
 						.getColumnIndex("ProductID")));
 				mi.setMenuName(cursor.getString(cursor
@@ -2100,10 +2109,12 @@ public abstract class POSOrderBase {
 
 	// update orderDetail
 	public Boolean updateSeatOrderDetail(int transactionId, int orderDetailId,
-			int seatId, String seatName) {
+			int seatId, String seatName, int courseId, String courseName) {
 		Boolean isSuccess = false;
 		String strSql = "UPDATE " + ORDER_DETAIL_TABLE + " SET SeatID=" + seatId
 				+ ", SeatName='" + seatName + "', "
+				+ " CourseID=" + courseId + ", "
+				+ " CourseName='" + courseName + "', "
 				+ " UpdateTime='" + globalVar.dateTimeFormat.format(globalVar.date) + "' "
 				+ " WHERE TransactionID=" + transactionId
 				+ " AND OrderDetailID=" + orderDetailId;
@@ -2303,7 +2314,8 @@ public abstract class POSOrderBase {
 			int productId, String productName, int productTypeId, int saleMode,
 			double qty, double productPrice, double vatAmount,
 			double memberDiscountAmount, double priceDiscountAmount,
-			int parentOrderDetailId, double discountValue, int seatId, String seatName) {
+			int parentOrderDetailId, double discountValue, int seatId, String seatName,
+			int courseId, String courseName) {
 
 		openDatabase();
 		int maxOrderDetailId = getMaxOrderDetailId(transactionId);
@@ -2318,6 +2330,8 @@ public abstract class POSOrderBase {
 		cv.put("ProductTypeID", productTypeId);
 		cv.put("SaleMode", saleMode);
 		cv.put("SeatID", seatId);
+		cv.put("CourseID", courseId);
+		cv.put("CourseName", courseName);
 		cv.put("SeatName", seatName);
 		cv.put("Qty", qty);
 		cv.put("PricePerUnit", productPrice);

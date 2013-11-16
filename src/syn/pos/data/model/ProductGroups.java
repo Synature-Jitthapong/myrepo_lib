@@ -15,7 +15,25 @@ public class ProductGroups {
 	private List<QuestionGroup> QuestionGroup;
 	private List<QuestionDetail> QuestionDetail;
 	private List<AnswerOption> AnswerOption;
+	private List<CommentTransDept> CommentTransDept;
+	private List<CommentTransItem> CommentTransItem;
 	
+	public List<CommentTransDept> getCommentTransDept() {
+		return CommentTransDept;
+	}
+
+	public void setCommentTransDept(List<CommentTransDept> commentTransDept) {
+		CommentTransDept = commentTransDept;
+	}
+
+	public List<CommentTransItem> getCommentTransItem() {
+		return CommentTransItem;
+	}
+
+	public void setCommentTransItem(List<CommentTransItem> commentTransItem) {
+		CommentTransItem = commentTransItem;
+	}
+
 	public List<AnswerOption> getAnswerOption() {
 		return AnswerOption;
 	}
@@ -112,6 +130,79 @@ public class ProductGroups {
 		ProductComponent = productComponent;
 	}
 
+	public static class CommentTransItem{
+		private int CommentDeptID;
+		private int CommentItemID;
+		private String CommentItemCode;
+		private String CommentItemName;
+
+		public int getCommentDeptID() {
+			return CommentDeptID;
+		}
+
+		public void setCommentDeptID(int commentDeptID) {
+			CommentDeptID = commentDeptID;
+		}
+
+		public int getCommentItemID() {
+			return CommentItemID;
+		}
+
+		public void setCommentItemID(int commentItemID) {
+			CommentItemID = commentItemID;
+		}
+
+		public String getCommentItemCode() {
+			return CommentItemCode;
+		}
+
+		public void setCommentItemCode(String commentItemCode) {
+			CommentItemCode = commentItemCode;
+		}
+
+		public String getCommentItemName() {
+			return CommentItemName;
+		}
+
+		public void setCommentItemName(String commentItemName) {
+			CommentItemName = commentItemName;
+		}
+
+		@Override
+		public String toString() {
+			return CommentItemName;
+		}
+	}
+	public static class CommentTransDept{
+        private int CommentDeptID;
+        private String CommentDeptCode;
+        private String CommentDeptName;
+        
+		public int getCommentDeptID() {
+			return CommentDeptID;
+		}
+		public void setCommentDeptID(int commentDeptID) {
+			CommentDeptID = commentDeptID;
+		}
+		public String getCommentDeptCode() {
+			return CommentDeptCode;
+		}
+		public void setCommentDeptCode(String commentDeptCode) {
+			CommentDeptCode = commentDeptCode;
+		}
+		public String getCommentDeptName() {
+			return CommentDeptName;
+		}
+		public void setCommentDeptName(String commentDeptName) {
+			CommentDeptName = commentDeptName;
+		}
+		
+		@Override
+		public String toString() {
+			return CommentDeptName;
+		}
+    }
+	
 	public static class AnswerOption{
 		private int AnswerID;
         private int QuestionID;

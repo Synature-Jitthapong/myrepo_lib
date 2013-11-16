@@ -41,6 +41,8 @@ public class MenuDataItem {
 	private String productBarcode;
 	private int seatId;
 	private String seatName;
+	private int courseId;
+	private String courseName;
 
 	private String holdDate;
 	private String holdBy;
@@ -49,6 +51,18 @@ public class MenuDataItem {
 	public List<MenuGroups.MenuComment> menuCommentList;
 	public List<ProductGroups.PComponentSet> pCompSetLst;
 		
+	public int getCourseId() {
+		return courseId;
+	}
+	public void setCourseId(int courseId) {
+		this.courseId = courseId;
+	}
+	public String getCourseName() {
+		return courseName;
+	}
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
 	public String getSeatName() {
 		return seatName;
 	}

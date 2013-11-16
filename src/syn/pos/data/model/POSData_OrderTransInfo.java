@@ -155,10 +155,17 @@ public class POSData_OrderTransInfo {
 		private int iSaleMode;
 		private String szOrderComment;
 		private int iSeatID;
+		private int iCourseID;
 
 		public List<POSData_CommentInfo> xListCommentInfo;
         public List<POSData_ChildOrderSetLinkType7Info> xListChildOrderSetLinkType7;
 
+		public int getiCourseID() {
+			return iCourseID;
+		}
+		public void setiCourseID(int iCourseID) {
+			this.iCourseID = iCourseID;
+		}
 		public int getiSeatID() {
 			return iSeatID;
 		}
