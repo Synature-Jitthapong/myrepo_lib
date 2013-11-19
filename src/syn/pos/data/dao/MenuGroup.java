@@ -11,8 +11,6 @@ import syn.pos.data.model.*;
 
 public class MenuGroup{
 	private DataBaseHelper dbHelper;
-	private String strSql = "SELECT * FROM MenuGroup WHERE MenuGroupType=0 " +
-			" AND Activate=1 ORDER BY MenuGroupOrdering";
 
 	public MenuGroup(Context context) {
 		dbHelper = new DataBaseHelper(context);
@@ -49,12 +47,47 @@ public class MenuGroup{
 		return isSuccess;
 	}
 
+	public List<MenuGroups.MenuGroup> listAllMenuGroupNoActivated() {
+		List<MenuGroups.MenuGroup> mgl = new ArrayList<MenuGroups.MenuGroup>();
+
+		dbHelper.openDataBase();
+
+		Cursor cursor = dbHelper.myDataBase.rawQuery("SELECT * FROM MenuGroup WHERE MenuGroupType=0 " +
+				" ORDER BY MenuGroupOrdering", null);
+
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			MenuGroups.MenuGroup mg = new MenuGroups.MenuGroup();
+
+			mg.setMenuGroupID(cursor.getInt(0));
+			mg.setMenuGroupName_0(cursor.getString(1));
+			mg.setMenuGroupName_1(cursor.getString(2));
+			mg.setMenuGroupName_2(cursor.getString(3));
+			mg.setMenuGroupName_3(cursor.getString(4));
+			// .setMenuGroupName_4(cursor.getString(5));
+			// mg.setMenuGroupName_5(cursor.getString(6));
+			mg.setMenuGroupOrdering(cursor.getInt(5));
+			mg.setMenuGroupType(cursor.getInt(6));
+			mg.setUpdateDate(cursor.getString(7));
+
+			mgl.add(mg);
+
+			cursor.moveToNext();
+		}
+
+		cursor.close();
+		dbHelper.closeDataBase();
+
+		return mgl;
+	}
+	
 	public List<MenuGroups.MenuGroup> listAllMenuGroup() {
 		List<MenuGroups.MenuGroup> mgl = new ArrayList<MenuGroups.MenuGroup>();
 
 		dbHelper.openDataBase();
 
-		Cursor cursor = dbHelper.myDataBase.rawQuery(strSql, null);
+		Cursor cursor = dbHelper.myDataBase.rawQuery("SELECT * FROM MenuGroup WHERE MenuGroupType=0 " +
+				" AND Activate=1 ORDER BY MenuGroupOrdering", null);
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {

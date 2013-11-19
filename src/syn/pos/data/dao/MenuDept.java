@@ -11,18 +11,9 @@ import android.database.SQLException;
 
 public class MenuDept {
 	private DataBaseHelper dbHelper;
-	private String strSql = "SELECT * FROM MenuDept ";
-
+	
 	public MenuDept(Context context) {
 		dbHelper = new DataBaseHelper(context);
-		strSql += " WHERE Activate=1 ORDER BY MenuDeptOrdering, MenuDeptName_0 ";
-	}
-
-	public MenuDept(Context context, int menuGroupId) {
-		dbHelper = new DataBaseHelper(context);
-		if (menuGroupId != 0)
-			strSql += " WHERE MenuGroupID=" + menuGroupId + " AND Activate=1 ";
-		strSql += " ORDER BY MenuDeptOrdering, MenuDeptName_0";
 	}
 
 	public Boolean insertMenuDept(MenuGroups mg) {
@@ -55,19 +46,59 @@ public class MenuDept {
 		return isSuccess;
 	}
 
-	public Cursor getMenuDept() {
-		dbHelper.openDataBase();
-		Cursor cursor = dbHelper.myDataBase.rawQuery(strSql, null);
-		dbHelper.closeDataBase();
-		return cursor;
-	}
+//	public Cursor getMenuDept() {
+//		dbHelper.openDataBase();
+//		Cursor cursor = dbHelper.myDataBase.rawQuery("SELECT * FROM MenuDept WHERE " +
+//				"Activate=1 ORDER BY MenuDeptOrdering, MenuDeptName_0", null);
+//		dbHelper.closeDataBase();
+//		return cursor;
+//	}
 	
-	public List<MenuGroups.MenuDept> listMenuDept() {
+	public List<MenuGroups.MenuDept> listMenuDeptNoActivated(int groupId) {
 		List<MenuGroups.MenuDept> mdl = new ArrayList<MenuGroups.MenuDept>();
 
 		dbHelper.openDataBase();
 
-		Cursor cursor = dbHelper.myDataBase.rawQuery(strSql, null);
+		Cursor cursor = dbHelper.myDataBase.rawQuery("SELECT * FROM MenuDept WHERE " +
+				" MenuGroupID=" + groupId + 
+				" ORDER BY MenuDeptOrdering, MenuDeptName_0", null);
+
+		cursor.moveToFirst();
+		MenuGroups.MenuDept md;
+		while (!cursor.isAfterLast()) {
+			md = new MenuGroups.MenuDept();
+
+			md.setMenuDeptID(cursor.getInt(0));
+			md.setMenuGroupID(cursor.getInt(1));
+			md.setMenuDeptName_0(cursor.getString(2) != "" ? cursor.getString(2) : "");
+//			md.setMenuDeptName_1(cursor.getString(3));
+//			md.setMenuDeptName_2(cursor.getString(4));
+//			md.setMenuDeptName_3(cursor.getString(5));
+			// md.setMenuDeptName_4(cursor.getString(6));
+			// md.setMenuDeptName_5(cursor.getString(7));
+			md.setMenuDeptOrdering(cursor.getInt(6));
+			md.setUpdateDate(cursor.getString(7));
+
+			mdl.add(md);
+
+			cursor.moveToNext();
+		}
+		cursor.close();
+		
+		dbHelper.closeDataBase();
+
+		return mdl;
+	}
+	
+	public List<MenuGroups.MenuDept> listMenuDept(int groupId) {
+		List<MenuGroups.MenuDept> mdl = new ArrayList<MenuGroups.MenuDept>();
+
+		dbHelper.openDataBase();
+
+		Cursor cursor = dbHelper.myDataBase.rawQuery("SELECT * FROM MenuDept WHERE " +
+				" MenuGroupID=" + groupId + 
+				" AND Activate=1 " +
+				" ORDER BY MenuDeptOrdering, MenuDeptName_0", null);
 
 		cursor.moveToFirst();
 		MenuGroups.MenuDept md;
