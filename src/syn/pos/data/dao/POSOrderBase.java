@@ -221,7 +221,7 @@ public abstract class POSOrderBase {
 
 	// list order grouper
 	public List<syn.pos.data.model.MenuDataItem> listAllOrder(
-			int transactionId, int computerId, int seatId) {
+			int transactionId, int computerId, int seatId, int courseId) {
 		List<syn.pos.data.model.MenuDataItem> ml = new ArrayList<syn.pos.data.model.MenuDataItem>();
 
 		String strSql = "SELECT a.TransactionID, a.ComputerID, b.OrderDetailID, "
@@ -248,6 +248,8 @@ public abstract class POSOrderBase {
 			
 		if(seatId != 0)
 			strSql += " AND b.SeatID=" + seatId;
+		if(courseId != 0)
+			strSql += " AND b.CourseID=" + courseId;
 		strSql += " ORDER BY b.OrderDetailID ";
 
 		openDatabase();
@@ -462,7 +464,7 @@ public abstract class POSOrderBase {
 	}
 
 	public syn.pos.data.model.MenuDataItem listOrder(int transactionId,
-			int computerId, int orderDetailId, int seatId) {
+			int computerId, int orderDetailId, int seatId, int courseId) {
 		syn.pos.data.model.MenuDataItem mi = new syn.pos.data.model.MenuDataItem();
 
 		String strSql = "SELECT a.TransactionID, a.ComputerID, b.OrderDetailID, "
@@ -490,6 +492,8 @@ public abstract class POSOrderBase {
 				+ " AND a.TransactionStatusID=1 ";
 		if(seatId != 0)
 			strSql += " AND b.SeatID=" + seatId;
+		if(courseId != 0)
+			strSql += " AND b.CourseID=" + courseId;
 		
 		strSql += " ORDER BY b.OrderDetailID ";
 

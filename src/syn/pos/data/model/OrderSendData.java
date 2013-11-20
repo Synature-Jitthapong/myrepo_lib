@@ -60,6 +60,15 @@ public class OrderSendData {
 		private String szFinishTime;
 		private int iOrderWaitMinTime;
 		private int iSeatID;
+		private int iCourseID;
+
+		public int getiCourseID() {
+			return iCourseID;
+		}
+
+		public void setiCourseID(int iCourseID) {
+			this.iCourseID = iCourseID;
+		}
 
 		public int getiSeatID() {
 			return iSeatID;

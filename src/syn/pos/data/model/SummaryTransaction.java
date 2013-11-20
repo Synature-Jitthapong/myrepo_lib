@@ -117,6 +117,11 @@ public class SummaryTransaction {
         public int totalPriceRoundingType;
         public int iPrintOrder_Status;
         public String dPrintOrder_InsertDate;
+        public int iSeatID;
+        public int iGroupNo;
+        public String szSeatNo;
+        public String szGroupNoShortName;
+        public String szGroupNoName;
     }
     
     public static class TransactionDiscountDetail {
