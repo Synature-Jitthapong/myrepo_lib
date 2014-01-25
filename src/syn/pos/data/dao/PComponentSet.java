@@ -84,7 +84,8 @@ public class PComponentSet {
 				+ " LEFT JOIN MenuItem c "
 				+ " ON a.ChildProductID = c.ProductID "
 				+ " WHERE a.ProductID="
-				+ productId;
+				+ productId
+				+ " ORDER BY c.MenuItemOrdering";
 		Cursor cursor = dbHelper.myDataBase.rawQuery(strSql, null);
 		if (cursor.moveToFirst()) {
 			do {
