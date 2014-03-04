@@ -27,6 +27,15 @@ public class TableInfo {
 	private boolean bIsDummy;
 	private boolean bIsSplitTransaction;
 	private int iNoUnSubmitOrder;
+	private boolean isChecked;
+
+	public boolean isChecked() {
+		return isChecked;
+	}
+
+	public void setChecked(boolean isChecked) {
+		this.isChecked = isChecked;
+	}
 
 	public int getiTableID() {
 		return iTableID;
