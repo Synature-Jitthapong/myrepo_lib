@@ -2313,40 +2313,114 @@ public abstract class POSOrderBase {
 		return lastOrderDetailId;
 	}
 
+	public OrderData getAddedOrder(int transactionId, int computerId, int productId){
+		OrderData data = new OrderData();
+		Cursor cursor = dbHelper.myDataBase.query(ORDER_DETAIL_TABLE, 
+				new String[]{"OrderDetailID", "Qty"}, 
+				"TransactionID=? AND ComputerID=? AND ProductID=?", 
+				new String[]{
+					String.valueOf(transactionId),
+					String.valueOf(computerId),
+					String.valueOf(productId),
+				}, null, null, "OrderDetailID DESC");
+		if(cursor.moveToFirst()){
+			data.setOrderDetailId(cursor.getInt(0));
+			data.setOrderQty(cursor.getDouble(1));
+		}
+		cursor.close();
+		return data;
+	}
+	
+	private class OrderData{
+		private int orderDetailId;
+		private double orderQty;
+		public int getOrderDetailId() {
+			return orderDetailId;
+		}
+		public void setOrderDetailId(int orderDetailId) {
+			this.orderDetailId = orderDetailId;
+		}
+		public double getOrderQty() {
+			return orderQty;
+		}
+		public void setOrderQty(double orderQty) {
+			this.orderQty = orderQty;
+		}
+	}
+	
 	// add orderdetail
 	public int addOrderDetail(int transactionId, int computerId, int shopId,
 			int productId, String productName, int productTypeId, int saleMode,
 			double qty, double productPrice, double vatAmount,
 			double memberDiscountAmount, double priceDiscountAmount,
 			int parentOrderDetailId, double discountValue, int seatId, String seatName,
-			int courseId, String courseName) {
+			int courseId, String courseName, boolean isAddSameItem) {
 
+		boolean isUpdate = false;
+		int maxOrderDetailId = 0; 
 		openDatabase();
-		int maxOrderDetailId = getMaxOrderDetailId(transactionId);
-
-		ContentValues cv = new ContentValues();
-		cv.put("OrderDetailID", maxOrderDetailId);
-		cv.put("TransactionID", transactionId);
-		cv.put("ComputerID", computerId);
-		cv.put("ShopID", shopId);
-		cv.put("ProductID", productId);
-		cv.put("ProductName", productName);
-		cv.put("ProductTypeID", productTypeId);
-		cv.put("SaleMode", saleMode);
-		cv.put("SeatID", seatId);
-		cv.put("CourseID", courseId);
-		cv.put("CourseName", courseName);
-		cv.put("SeatName", seatName);
-		cv.put("Qty", qty);
-		cv.put("PricePerUnit", productPrice);
-		cv.put("OrderComment", "");
-		cv.put("UpdateTime", globalVar.dateTimeFormat.format(globalVar.date));
-
-		try {
-			dbHelper.myDataBase.insert(ORDER_DETAIL_TABLE, null, cv);
-		} catch (Exception e) {
-			Log.appendLog(this.context, "Create orderdetail success fail ==> "
-					+ e.getMessage());
+		if(isAddSameItem)
+		{
+			OrderData data = getAddedOrder(transactionId, computerId, productId); 
+			maxOrderDetailId = data.getOrderDetailId();
+			if( data.getOrderDetailId() > 0){
+				boolean isHasComment = false;
+				Cursor cursor = dbHelper.myDataBase.query(ORDER_COMMENT_TABLE, 
+						new String[]{"MenuCommentID"}, 
+						"TransactionID=? AND OrderDetailID=?", 
+						new String[]{
+							String.valueOf(transactionId),
+							String.valueOf(data.getOrderDetailId()),
+						}, null, null, null);
+				if(cursor.moveToFirst()){
+					if(cursor.getInt(0) > 0)
+						isHasComment = true;
+				}
+				cursor.close();
+				if(!isHasComment){
+					ContentValues cv = new ContentValues();
+					cv.put("Qty", (qty + data.getOrderQty()));
+					dbHelper.myDataBase.update(ORDER_DETAIL_TABLE, cv, 
+							"TransactionID=? AND ComputerID=? AND OrderDetailID=? AND ProductID=?", 
+							new String[]{
+								String.valueOf(transactionId),
+								String.valueOf(computerId),
+								String.valueOf(data.getOrderDetailId()),
+								String.valueOf(productId)
+							});
+					isUpdate = true;
+				}
+			}else{
+				isUpdate = false;
+			}
+		}
+		
+		if(!isUpdate){
+			maxOrderDetailId = getMaxOrderDetailId(transactionId);
+			ContentValues cv = new ContentValues();
+			cv.put("OrderDetailID", maxOrderDetailId);
+			cv.put("TransactionID", transactionId);
+			cv.put("ComputerID", computerId);
+			cv.put("ShopID", shopId);
+			cv.put("ProductID", productId);
+			cv.put("ProductName", productName);
+			cv.put("ProductTypeID", productTypeId);
+			cv.put("SaleMode", saleMode);
+			cv.put("SeatID", seatId);
+			cv.put("CourseID", courseId);
+			cv.put("CourseName", courseName);
+			cv.put("SeatName", seatName);
+			cv.put("Qty", qty);
+			cv.put("PricePerUnit", productPrice);
+			cv.put("OrderComment", "");
+			cv.put("UpdateTime", globalVar.dateTimeFormat.format(globalVar.date));
+	
+			try { 
+				dbHelper.myDataBase.insert(ORDER_DETAIL_TABLE, null, cv);
+			} catch (Exception e) {
+				Log.appendLog(this.context, "Create orderdetail success fail ==> "
+						+ e.getMessage());
+			}
 		}
 		closeDatabase();
 		return maxOrderDetailId;
