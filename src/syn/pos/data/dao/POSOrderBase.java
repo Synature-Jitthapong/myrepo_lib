@@ -2359,7 +2359,7 @@ public abstract class POSOrderBase {
 		boolean isUpdate = false;
 		int maxOrderDetailId = 0; 
 		openDatabase();
-		if(isAddSameItem)
+		if(isAddSameItem && productTypeId != 7)
 		{
 			OrderData data = getAddedOrder(transactionId, computerId, productId); 
 			maxOrderDetailId = data.getOrderDetailId();
