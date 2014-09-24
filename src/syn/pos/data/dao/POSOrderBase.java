@@ -2215,6 +2215,10 @@ public abstract class POSOrderBase {
 					cv.put("ShopID", shopId);
 					cv.put("ProductID", order.getiProductID());
 					cv.put("ProductName", "");
+					cv.put("SeatID", order.getiSeatID());
+					cv.put("CourseID", order.getiCourseID());
+					cv.put("CourseName", "");
+					cv.put("SeatName", "");
 					cv.put("Qty", order.getfProductQty());
 					cv.put("PricePerUnit", order.getfProductPrice());
 					cv.put("OrderComment", order.getSzOrderComment());
@@ -2313,15 +2317,16 @@ public abstract class POSOrderBase {
 		return lastOrderDetailId;
 	}
 
-	public OrderData getAddedOrder(int transactionId, int computerId, int productId){
+	public OrderData getAddedOrder(int transactionId, int computerId, int productId, int saleMode){
 		OrderData data = new OrderData();
 		Cursor cursor = dbHelper.myDataBase.query(ORDER_DETAIL_TABLE, 
 				new String[]{"OrderDetailID", "Qty"}, 
-				"TransactionID=? AND ComputerID=? AND ProductID=?", 
+				"TransactionID=? AND ComputerID=? AND ProductID=? AND SaleMode=?", 
 				new String[]{
 					String.valueOf(transactionId),
 					String.valueOf(computerId),
 					String.valueOf(productId),
+					String.valueOf(saleMode)
 				}, null, null, "OrderDetailID DESC");
 		if(cursor.moveToFirst()){
 			data.setOrderDetailId(cursor.getInt(0));
@@ -2361,7 +2366,7 @@ public abstract class POSOrderBase {
 		openDatabase();
 		if(isAddSameItem && productTypeId != 7)
 		{
-			OrderData data = getAddedOrder(transactionId, computerId, productId); 
+			OrderData data = getAddedOrder(transactionId, computerId, productId, saleMode); 
 			maxOrderDetailId = data.getOrderDetailId();
 			if( data.getOrderDetailId() > 0){
 				boolean isHasComment = false;
