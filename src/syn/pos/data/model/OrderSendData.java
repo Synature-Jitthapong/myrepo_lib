@@ -3,6 +3,7 @@ package syn.pos.data.model;
 import java.util.List;
 
 public class OrderSendData {
+	public OrderTransaction xTransaction;
 	public List<OrderDetail> xListOrderDetail;
 	
 	public static class OrderTransaction{
@@ -11,8 +12,22 @@ public class OrderSendData {
 	    private double fTotalItemPrice;
 	    private double fTotalDiscount;
 	    private double fGrandTotalPrice;
+	    private int iCallForCheckBill;
+	    private int iNoPrintBillDetail;
 		
-	    public int getiTableID() {
+	    public int getiNoPrintBillDetail() {
+			return iNoPrintBillDetail;
+		}
+		public void setiNoPrintBillDetail(int iNoPrintBillDetail) {
+			this.iNoPrintBillDetail = iNoPrintBillDetail;
+		}
+		public int getiCallForCheckBill() {
+			return iCallForCheckBill;
+		}
+		public void setiCallForCheckBill(int iCallForCheckBill) {
+			this.iCallForCheckBill = iCallForCheckBill;
+		}
+		public int getiTableID() {
 			return iTableID;
 		}
 		public void setiTableID(int iTableID) {
