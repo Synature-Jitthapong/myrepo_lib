@@ -87,6 +87,51 @@ public class ShopData {
 		private double CompanyVat;
 		private int FeatureQueue;
 		private int CommentType;
+		private int ReqReasonMoveTable;
+		private int ReqReasonReprintTrans;
+		private int ReqReasonVoidTrans;
+		private int ReqReasonVoidOrder;
+		private int ReqReasonPrintBillDetail;
+
+		public int getReqReasonMoveTable() {
+			return ReqReasonMoveTable;
+		}
+
+		public void setReqReasonMoveTable(int reqReasonMoveTable) {
+			ReqReasonMoveTable = reqReasonMoveTable;
+		}
+
+		public int getReqReasonReprintTrans() {
+			return ReqReasonReprintTrans;
+		}
+
+		public void setReqReasonReprintTrans(int reqReasonReprintTrans) {
+			ReqReasonReprintTrans = reqReasonReprintTrans;
+		}
+
+		public int getReqReasonVoidTrans() {
+			return ReqReasonVoidTrans;
+		}
+
+		public void setReqReasonVoidTrans(int reqReasonVoidTrans) {
+			ReqReasonVoidTrans = reqReasonVoidTrans;
+		}
+
+		public int getReqReasonVoidOrder() {
+			return ReqReasonVoidOrder;
+		}
+
+		public void setReqReasonVoidOrder(int reqReasonVoidOrder) {
+			ReqReasonVoidOrder = reqReasonVoidOrder;
+		}
+
+		public int getReqReasonPrintBillDetail() {
+			return ReqReasonPrintBillDetail;
+		}
+
+		public void setReqReasonPrintBillDetail(int reqReasonPrintBillDetail) {
+			ReqReasonPrintBillDetail = reqReasonPrintBillDetail;
+		}
 
 		public int getFeatureQueue() {
 			return FeatureQueue;
