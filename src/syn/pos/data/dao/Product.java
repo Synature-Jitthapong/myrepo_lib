@@ -113,7 +113,7 @@ public class Product{
 	
 	public void insertCommentProduct(ProductGroups pg){
 		dbHelper.openDataBase();
-		
+		dbHelper.myDataBase.beginTransaction();
 		try {
 			dbHelper.myDataBase.execSQL("DELETE FROM CommentProduct");
 			
@@ -124,18 +124,20 @@ public class Product{
 				
 				dbHelper.myDataBase.insert("CommentProduct", null, cv);
 			}
+			dbHelper.myDataBase.setTransactionSuccessful();
 		} catch (SQLException e) {
 			Log.appendLog(context, e.getMessage());
 			e.printStackTrace();
+		}finally{
+			dbHelper.myDataBase.endTransaction();
 		}
-		
 		dbHelper.closeDataBase();
 	}
 	
 	public Boolean insertProduct(ProductGroups pg) {
 		Boolean isSuccess = false;
 		dbHelper.openDataBase();
-
+		dbHelper.myDataBase.beginTransaction();
 		try {
 			dbHelper.myDataBase.execSQL("DELETE FROM Products");
 			for (ProductGroups.Products p : pg.getProduct()) {
@@ -171,10 +173,13 @@ public class Product{
 				dbHelper.myDataBase.insert("Products", null, cv);
 				isSuccess = true;
 			}
+			dbHelper.myDataBase.setTransactionSuccessful();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			isSuccess = false;
 			Log.appendLog(context, e.getMessage());
+		} finally{
+			dbHelper.myDataBase.endTransaction();
 		}
 		dbHelper.closeDataBase();
 		return isSuccess;

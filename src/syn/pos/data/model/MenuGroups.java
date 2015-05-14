@@ -86,7 +86,14 @@ public class MenuGroups {
 		private String itemHtml;
 		private double commentQty;
 		private boolean isChecked;
+		private boolean commentWithPrice;
 		
+		public boolean isCommentWithPrice() {
+			return commentWithPrice;
+		}
+		public void setCommentWithPrice(boolean commentWithPrice) {
+			this.commentWithPrice = commentWithPrice;
+		}
 		public int getMenuCommentGroupID() {
 			return MenuCommentGroupID;
 		}

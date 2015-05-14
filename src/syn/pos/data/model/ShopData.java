@@ -87,11 +87,11 @@ public class ShopData {
 		private double CompanyVat;
 		private int FeatureQueue;
 		private int CommentType;
-		private int ReqReasonMoveTable;
-		private int ReqReasonReprintTrans;
-		private int ReqReasonVoidTrans;
-		private int ReqReasonVoidOrder;
-		private int ReqReasonPrintBillDetail;
+		private int ReqReasonMoveTable = 1;
+		private int ReqReasonReprintTrans = 1;
+		private int ReqReasonVoidTrans = 1;
+		private int ReqReasonVoidOrder = 1;
+		private int ReqReasonPrintBillDetail = 1;
 
 		public int getReqReasonMoveTable() {
 			return ReqReasonMoveTable;

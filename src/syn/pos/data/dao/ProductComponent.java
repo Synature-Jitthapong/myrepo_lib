@@ -59,8 +59,8 @@ public class ProductComponent {
 
 	public void insertProductComponent(ProductGroups pg) {
 		dbHelper.openDataBase();
+		dbHelper.myDataBase.beginTransaction();
 		try {
-			dbHelper.myDataBase.execSQL("BEGIN");
 			dbHelper.myDataBase.execSQL("DELETE FROM ProductComponent");
 
 			for (ProductGroups.ProductComponent pc : pg.getProductComponent()) {
@@ -76,10 +76,11 @@ public class ProductComponent {
 				
 				dbHelper.myDataBase.insert("ProductComponent", null, cv);
 			}
-			dbHelper.myDataBase.execSQL("COMMIT");
+			dbHelper.myDataBase.setTransactionSuccessful();
 		} catch (SQLException e) {
-			dbHelper.myDataBase.execSQL("ROLLBACK");
 			e.printStackTrace();
+		} finally{
+			dbHelper.myDataBase.endTransaction();
 		}
 
 		dbHelper.closeDataBase();

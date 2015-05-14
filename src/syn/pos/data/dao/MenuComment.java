@@ -28,6 +28,7 @@ public class MenuComment{
 	
 	private final String COL_PRODUCT_ID = "ProductID";
 	private final String COL_PRODUCT_PRICE = "ProductPricePerUnit";
+	private final String COL_PRODUCT_TYPE_ID = "ProductTypeID";
 	
 	private String strSql = " SELECT a.MenuCommentID, a.MenuCommentName_0, "
 			+ " b.ProductID, b.ProductPricePerUnit " + " FROM MenuComment a "
@@ -53,7 +54,7 @@ public class MenuComment{
 		dbHelper.openDataBase();
 		String strSql = "SELECT " + COL_MENU_COMMENT_ID + ", " + COL_MENU_COMMENT_GROUP_ID + ", " +
 				COL_MENU_COMMENT_NAME_0 + ", " + COL_PRODUCT_ID + ", " + 
-				COL_PRODUCT_PRICE +
+				COL_PRODUCT_PRICE + ", " + COL_PRODUCT_TYPE_ID +
 				" FROM " + TB_MENU_COMMENT + " a " +
 				" LEFT JOIN " + TB_PRODUCT + " b " +
 				" ON a.MenuCommentID=b.ProductID ";
@@ -71,6 +72,8 @@ public class MenuComment{
 				mc.setMenuCommentName_0(cursor.getString(cursor.getColumnIndex(COL_MENU_COMMENT_NAME_0)));
 				mc.setProductID(cursor.getInt(cursor.getColumnIndex(COL_PRODUCT_ID)));
 				mc.setProductPricePerUnit(cursor.getDouble(cursor.getColumnIndex(COL_PRODUCT_PRICE)));
+				mc.setCommentWithPrice(
+						cursor.getInt(cursor.getColumnIndex(COL_PRODUCT_TYPE_ID)) == 15 ? true : false);
 				
 				mcLst.add(mc);
 			}while(cursor.moveToNext());

@@ -228,6 +228,7 @@ public class MenuItem {
 	public Boolean insertMenuItem(MenuGroups mg) {
 		Boolean isSuccess = false;
 		dbHelper.openDataBase();
+		dbHelper.myDataBase.beginTransaction();
 		try {
 			dbHelper.myDataBase.execSQL("DELETE FROM MenuItem");
 			ContentValues cv = new ContentValues();
@@ -256,10 +257,13 @@ public class MenuItem {
 				dbHelper.myDataBase.insert("MenuItem", null, cv);
 				isSuccess = true;
 			}
+			dbHelper.myDataBase.setTransactionSuccessful();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			isSuccess = false;
 			Log.appendLog(context, e.getMessage());
+		} finally{
+			dbHelper.myDataBase.endTransaction();
 		}
 		dbHelper.closeDataBase();
 		return isSuccess;

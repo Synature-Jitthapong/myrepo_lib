@@ -14,7 +14,7 @@ public class ProductDept {
 	
 	public void insertProductDept(ProductGroups pg){
 		dbHelper.openDataBase();
-		
+		dbHelper.myDataBase.beginTransaction();
 		try {
 			dbHelper.myDataBase.execSQL("DELETE FROM ProductDept");
 			
@@ -30,8 +30,11 @@ public class ProductDept {
 				
 				dbHelper.myDataBase.insert("ProductDept", null, cv);
 			}
+			dbHelper.myDataBase.setTransactionSuccessful();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally{
+			dbHelper.myDataBase.endTransaction();
 		}
 		
 		dbHelper.closeDataBase();

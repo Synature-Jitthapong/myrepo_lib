@@ -47,7 +47,7 @@ public class ProductGroup{
 	public void insertProductGroup(ProductGroups pGroup) {
 
 		dbHelper.openDataBase();
-	
+		dbHelper.myDataBase.beginTransaction();
 		try {
 			dbHelper.myDataBase.execSQL("DELETE FROM ProductGroup");
 			
@@ -64,9 +64,12 @@ public class ProductGroup{
 				
 				dbHelper.myDataBase.insert("ProductGroup", null, cv);
 			}
+			dbHelper.myDataBase.setTransactionSuccessful();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally{
+			dbHelper.myDataBase.endTransaction();
 		}
 
 		dbHelper.closeDataBase();

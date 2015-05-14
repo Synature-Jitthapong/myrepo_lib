@@ -380,12 +380,15 @@ public abstract class POSOrderBase {
 
 						// order comment
 						strSql = "SELECT a.PGroupID, a.ProductID, a.MenuCommentID, "
-								+ " a.Qty, a.PricePerUnit, b.MenuCommentName_0 "
+								+ " a.Qty, a.PricePerUnit, b.MenuCommentName_0, "
+								+ " c.ProductTypeID "
 								+ " FROM "
 								+ ORDER_SET_COMMENT_TABLE
 								+ " a "
 								+ " LEFT JOIN MenuComment b "
 								+ " ON a.MenuCommentID=b.MenuCommentID "
+								+ " LEFT JOIN Products c "
+								+ " ON b.MenuCommentID=c.ProductID " 
 								+ " WHERE a.TransactionID="
 								+ transactionId
 								+ " AND a.OrderDetailID="
@@ -412,7 +415,8 @@ public abstract class POSOrderBase {
 										.getColumnIndex("PricePerUnit")));
 								mc.setMenuCommentName_0(cursor3.getString(cursor3
 										.getColumnIndex("MenuCommentName_0")));
-
+								mc.setCommentWithPrice(
+										cursor3.getInt(cursor3.getColumnIndex("ProductTypeID")) == 15 ? true : false);
 								pgs.menuCommentList.add(mc);
 							} while (cursor3.moveToNext());
 						}
@@ -426,10 +430,13 @@ public abstract class POSOrderBase {
 
 				// add order comment
 				String strSql2 = "SELECT a.MenuCommentID, "
-						+ " a.Qty, a.PricePerUnit, b.MenuCommentName_0 "
+						+ " a.Qty, a.PricePerUnit, b.MenuCommentName_0, "
+						+ " c.ProductTypeID "
 						+ " FROM " + ORDER_COMMENT_TABLE + " a "
 						+ " LEFT JOIN MenuComment b "
 						+ " ON a.MenuCommentID=b.MenuCommentID "
+						+ " LEFT JOIN Products c "
+						+ " ON b.MenuCommentID=c.ProductID "
 						+ " WHERE a.TransactionID=" + transactionId
 						+ " AND a.OrderDetailID=" + mi.getOrderDetailId();
 
@@ -447,7 +454,7 @@ public abstract class POSOrderBase {
 								.getColumnIndex("PricePerUnit")));
 						mc.setMenuCommentName_0(cursor2.getString(cursor2
 								.getColumnIndex("MenuCommentName_0")));
-
+						mc.setCommentWithPrice(cursor2.getInt(cursor2.getColumnIndex("ProductTypeID")) == 15 ? true : false);
 						mi.menuCommentList.add(mc);
 					} while (cursor2.moveToNext());
 				}
@@ -625,12 +632,15 @@ public abstract class POSOrderBase {
 
 						// order comment
 						strSql = "SELECT a.PGroupID, a.ProductID, a.MenuCommentID, "
-								+ " a.Qty, a.PricePerUnit, b.MenuCommentName_0 "
+								+ " a.Qty, a.PricePerUnit, b.MenuCommentName_0, "
+								+ " c.ProductTypeID "
 								+ " FROM "
 								+ ORDER_SET_COMMENT_TABLE
 								+ " a "
 								+ " LEFT JOIN MenuComment b "
 								+ " ON a.MenuCommentID=b.MenuCommentID "
+								+ " LEFT JOIN Products c "
+								+ " ON b.MenuCommentID=c.ProductID "
 								+ " WHERE a.TransactionID="
 								+ transactionId
 								+ " AND a.OrderDetailID="
@@ -656,7 +666,8 @@ public abstract class POSOrderBase {
 										.getColumnIndex("PricePerUnit")));
 								mc.setMenuCommentName_0(cursor3.getString(cursor3
 										.getColumnIndex("MenuCommentName_0")));
-
+								mc.setCommentWithPrice(
+										cursor3.getInt(cursor3.getColumnIndex("ProductTypeID")) == 15 ? true : false);
 								pgs.menuCommentList.add(mc);
 							} while (cursor3.moveToNext());
 						}
@@ -670,10 +681,13 @@ public abstract class POSOrderBase {
 
 				// add order comment
 				String strSql2 = "SELECT a.MenuCommentID, "
-						+ " a.Qty, a.PricePerUnit, b.MenuCommentName_0 "
+						+ " a.Qty, a.PricePerUnit, b.MenuCommentName_0, "
+						+ " c.ProductTypeID "
 						+ " FROM " + ORDER_COMMENT_TABLE + " a "
 						+ " LEFT JOIN MenuComment b "
 						+ " ON a.MenuCommentID=b.MenuCommentID "
+						+ " LEFT JOIN Products c "
+						+ " ON b.MenuCommentID=c.ProductID "
 						+ " WHERE a.TransactionID=" + transactionId
 						+ " AND a.OrderDetailID=" + mi.getOrderDetailId();
 
@@ -691,7 +705,7 @@ public abstract class POSOrderBase {
 								.getColumnIndex("PricePerUnit")));
 						mc.setMenuCommentName_0(cursor2.getString(cursor2
 								.getColumnIndex("MenuCommentName_0")));
-
+						mc.setCommentWithPrice(cursor2.getInt(cursor2.getColumnIndex("ProductTypeID")) == 15 ? true : false);
 						mi.menuCommentList.add(mc);
 					} while (cursor2.moveToNext());
 				}
@@ -799,14 +813,16 @@ public abstract class POSOrderBase {
 								.getColumnIndex("Comment")));
 
 						// comment of type 7
-						strSql = " SELECT PGroupID, ProductID, MenuCommentID, Qty, PricePerUnit "
-								+ " FROM "
-								+ ORDER_SET_COMMENT_TABLE
-								+ " WHERE TransactionID="
+						strSql = " SELECT a.PGroupID, a.ProductID, a.MenuCommentID, a.Qty, a.PricePerUnit, "
+								+ " b.ProductTypeID FROM "
+								+ ORDER_SET_COMMENT_TABLE + " a "
+								+ " LEFT JOIN Products b "
+								+ " ON a.MenuCommentID=b.ProductID"
+								+ " WHERE a.TransactionID="
 								+ transactionId
-								+ " AND OrderDetailID="
+								+ " AND a.OrderDetailID="
 								+ mi.getOrderDetailId()
-								+ " AND OrderSetID=" + pcs.getOrderSetID();
+								+ " AND a.OrderSetID=" + pcs.getOrderSetID();
 
 						Cursor curCommentType7 = dbHelper.myDataBase.rawQuery(
 								strSql, null);
@@ -827,7 +843,8 @@ public abstract class POSOrderBase {
 												.getColumnIndex("Qty")));
 								mc.setProductPricePerUnit(curCommentType7.getDouble(curCommentType7
 										.getColumnIndex("PricePerUnit")));
-
+								mc.setCommentWithPrice(
+										curCommentType7.getInt(curCommentType7.getColumnIndex("ProductTypeID")) == 15 ? true : false);
 								pcs.menuCommentList.add(mc);
 							} while (curCommentType7.moveToNext());
 						}
@@ -841,10 +858,13 @@ public abstract class POSOrderBase {
 
 				// add order comment
 				String strSql2 = "SELECT a.MenuCommentID, "
-						+ " a.Qty, a.PricePerUnit, b.MenuCommentName_0 "
+						+ " a.Qty, a.PricePerUnit, b.MenuCommentName_0, "
+						+ " c.ProductTypeID "
 						+ " FROM " + ORDER_COMMENT_TABLE + " a "
 						+ " LEFT JOIN MenuComment b "
 						+ " ON a.MenuCommentID=b.MenuCommentID "
+						+ " LEFT JOIN Products c "
+						+ " ON b.MenuCommentID=c.ProductID "
 						+ " WHERE a.TransactionID=" + transactionId
 						+ " AND a.OrderDetailID="
 						+ cursor.getInt(cursor.getColumnIndex("OrderDetailID"));
@@ -863,7 +883,7 @@ public abstract class POSOrderBase {
 								.getColumnIndex("PricePerUnit")));
 						mc.setMenuCommentName_0(cursor2.getString(cursor2
 								.getColumnIndex("MenuCommentName_0")));
-
+						mc.setCommentWithPrice(cursor2.getInt(cursor2.getColumnIndex("ProductTypeID")) == 15 ? true : false);
 						mi.menuCommentList.add(mc);
 					} while (cursor2.moveToNext());
 				}
@@ -959,9 +979,12 @@ public abstract class POSOrderBase {
 		List<MenuGroups.MenuComment> mcLst = new ArrayList<MenuGroups.MenuComment>();
 
 		String strSql = "SELECT a.MenuCommentID, "
-				+ " a.Qty, a.PricePerUnit, b.MenuCommentName_0 " + " FROM "
+				+ " a.Qty, a.PricePerUnit, b.MenuCommentName_0,"
+				+ " c.ProductTypeID " + " FROM "
 				+ ORDER_COMMENT_TABLE + " a " + " INNER JOIN MenuComment b "
 				+ " ON a.MenuCommentID=b.MenuCommentID "
+				+ " LEFT JOIN Products c "
+				+ " ON b.MenuCommentID=c.ProductID "
 				+ " WHERE a.TransactionID=" + transactionId
 				+ " AND a.OrderDetailID=" + orderId;
 
@@ -977,6 +1000,7 @@ public abstract class POSOrderBase {
 						.getColumnIndex("PricePerUnit")));
 				mc.setMenuCommentName_0(cursor.getString(cursor
 						.getColumnIndex("MenuCommentName_0")));
+				mc.setCommentWithPrice(cursor.getInt(cursor.getColumnIndex("ProductTypeID")) == 15 ? true : false);
 				mcLst.add(mc);
 			} while (cursor.moveToNext());
 		}
@@ -1209,12 +1233,14 @@ public abstract class POSOrderBase {
 
 						// order comment
 						strSql = "SELECT a.PGroupID, a.ProductID, a.MenuCommentID, "
-								+ " a.Qty, a.PricePerUnit, b.MenuCommentName_0 "
-								+ " FROM "
+								+ " a.Qty, a.PricePerUnit, b.MenuCommentName_0, "
+								+ " c.ProductTypeID FROM "
 								+ ORDER_SET_COMMENT_TABLE_TMP
 								+ " a "
 								+ " LEFT JOIN MenuComment b "
 								+ " ON a.MenuCommentID=b.MenuCommentID "
+								+ " LEFT JOIN Products c "
+								+ " ON b.MenuCommentID=c.ProductID "
 								+ " WHERE a.TransactionID="
 								+ transactionId
 								+ " AND a.OrderDetailID="
@@ -1240,7 +1266,7 @@ public abstract class POSOrderBase {
 										.getColumnIndex("PricePerUnit")));
 								mc.setMenuCommentName_0(cursor3.getString(cursor3
 										.getColumnIndex("MenuCommentName_0")));
-
+								mc.setCommentWithPrice(cursor3.getInt(cursor3.getColumnIndex("ProductTypeID")) == 15 ? true : false);
 								pgs.menuCommentList.add(mc);
 							} while (cursor3.moveToNext());
 						}
@@ -1352,12 +1378,15 @@ public abstract class POSOrderBase {
 
 						// order comment
 						strSql = "SELECT a.PGroupID, a.ProductID, a.MenuCommentID, "
-								+ " a.Qty, a.PricePerUnit, b.MenuCommentName_0 "
+								+ " a.Qty, a.PricePerUnit, b.MenuCommentName_0, "
+								+ " c.ProductTypeID "
 								+ " FROM "
 								+ ORDER_SET_COMMENT_TABLE_TMP
 								+ " a "
 								+ " LEFT JOIN MenuComment b "
 								+ " ON a.MenuCommentID=b.MenuCommentID "
+								+ " LEFT JOIN Products c "
+								+ " ON b.MenuCommentID=c.ProductID "
 								+ " WHERE a.TransactionID="
 								+ transactionId
 								+ " AND a.OrderDetailID="
@@ -1383,7 +1412,7 @@ public abstract class POSOrderBase {
 										.getColumnIndex("PricePerUnit")));
 								mc.setMenuCommentName_0(cursor3.getString(cursor3
 										.getColumnIndex("MenuCommentName_0")));
-
+								mc.setCommentWithPrice(cursor3.getInt(cursor3.getColumnIndex("ProductTypeID")) == 15 ? true : false);
 								pgs.menuCommentList.add(mc);
 							} while (cursor3.moveToNext());
 						}
